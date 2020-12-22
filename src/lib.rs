@@ -1,4 +1,6 @@
-//! # uX - non-standard-width integers types
+//! # core_uX - no_std crate for non-standard-width integers types
+//! **This crate is a simple modification from the original uX crate**
+//! 
 //!
 //! When non-standard-width integers is required in an applications, the norm is to use a larger container and make sure the value is within range after manipulation. uX aims to take care of this once and for all by:
 //!
@@ -8,14 +10,10 @@
 //! - All possible lossless conversions is possible by using `From`.
 //! - When `TryFrom` is stabilized fallible conversions will also be supported.
 
-
-#![cfg_attr(not(feature="std"), no_std)]
-
+#![no_std]
 
 mod lib {
     pub mod core {
-        #[cfg(feature="std")]
-        pub use std::*;
         #[cfg(not(feature="std"))]
         pub use core::*;
     }
@@ -23,7 +21,7 @@ mod lib {
 
 mod conversion;
 
-use lib::core::ops::{
+use core::ops::{
     Shr,
     ShrAssign,
     Shl,
@@ -37,18 +35,18 @@ use lib::core::ops::{
     Not
 };
 
-use lib::core::hash::{
+use core::hash::{
     Hash,
     Hasher,
 };
 
-use lib::core::cmp::{
+use core::cmp::{
     Ordering,
     Ord,
     PartialOrd,
 };
 
-use lib::core::fmt::{
+use core::fmt::{
     Display,
     Formatter,
     UpperHex,
@@ -213,31 +211,31 @@ macro_rules! implement_common {
 
         // Implement formating functions
         impl Display for $name {
-            fn fmt(&self, f: &mut Formatter) -> Result<(), lib::core::fmt::Error> {
+            fn fmt(&self, f: &mut Formatter) -> Result<(), core::fmt::Error> {
                 let &$name(ref value) = self;
                 <$type as Display>::fmt(value, f)
             }
         }
         impl UpperHex for $name {
-            fn fmt(&self, f: &mut Formatter) -> Result<(), lib::core::fmt::Error> {
+            fn fmt(&self, f: &mut Formatter) -> Result<(), core::fmt::Error> {
                 let &$name(ref value) = self;
                 <$type as UpperHex>::fmt(value, f)
             }
         }
         impl LowerHex for $name {
-            fn fmt(&self, f: &mut Formatter) -> Result<(), lib::core::fmt::Error> {
+            fn fmt(&self, f: &mut Formatter) -> Result<(), core::fmt::Error> {
                 let &$name(ref value) = self;
                 <$type as LowerHex>::fmt(value, f)
             }
         }
         impl Octal for $name {
-            fn fmt(&self, f: &mut Formatter) -> Result<(), lib::core::fmt::Error> {
+            fn fmt(&self, f: &mut Formatter) -> Result<(), core::fmt::Error> {
                 let &$name(ref value) = self;
                 <$type as Octal>::fmt(value, f)
             }
         }
         impl Binary for $name {
-            fn fmt(&self, f: &mut Formatter) -> Result<(), lib::core::fmt::Error> {
+            fn fmt(&self, f: &mut Formatter) -> Result<(), core::fmt::Error> {
                 let &$name(ref value) = self;
                 <$type as Binary>::fmt(value, f)
             }
@@ -406,7 +404,7 @@ macro_rules! implement_common {
             }
         }
 
-        impl lib::core::ops::Add<$name> for $name {
+        impl core::ops::Add<$name> for $name {
             type Output = $name;
             #[allow(unused_comparisons)]
             fn add(self, other: $name) -> $name {
@@ -419,7 +417,7 @@ macro_rules! implement_common {
             }
         }
 
-        impl lib::core::ops::Sub<$name> for $name {
+        impl core::ops::Sub<$name> for $name {
             type Output = $name;
             #[allow(unused_comparisons)]
             fn sub(self, other: $name) -> $name {
